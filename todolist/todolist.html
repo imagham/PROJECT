@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List -> FARAQY</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanadaka&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap"
+      rel="stylesheet"
+    />
+    <!-- css -->
+    <style>
+      .akaya-kanadaka-regular {
+        font-family: "Akaya Kanadaka", system-ui;
+        font-weight: 400;
+        font-style: normal;
+      }
+      .kalnia-regular {
+        font-family: "Kalnia", serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        font-style: normal;
+        font-variation-settings: "wdth" 100;
+      }
+      .undo-button,
+      .trash-button,
+      .check-button {
+        padding: 8px 12px;
+        margin: 5px;
+        border-radius: 8px;
+        color: white;
+        background-color: #493628;
+        cursor: pointer;
+        position: relative;
+        bottom: 45px;
+      }
+
+      .undo-button:hover,
+      .trash-button:hover,
+      .check-button:hover {
+        background-color: #bb8c6a;
+      }
+    </style>
+    <!-- end css -->
+    <!-- tailwind config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              kanadaka: ["Kanadaka"], // Custom Font Kanadaka
+            },
+          },
+        },
+      };
+    </script>
+    <!-- tailwind config -->
+  </head>
+  <body class="h-full bg-gradient-to-t from-[#45372C] to-[#AB886D] w-full">
+       <header class="w-full h-[83px] bg-[#493628] flex justify-between items-center px-6">
+        <div class="text-white text-4xl akaya-kanadaka-regular">
+          Todo List
+        </div>
+        <div class="text-white text-4xl akaya-kanadaka-regular">
+          FARAQY
+        </div>
+      </header>
+    <!-- Header -->
+    <div class="w-1/2 mx-auto h-auto bg-[#A28162] mt-24 rounded-lg">
+      <div
+        class="text-white text-[40px] p-12 text-center kalnia-regular fo bg-[#493628] rounded-t-lg"
+      >
+        TAMBAH YG HARUS DILAKUKAN
+      </div>
+      <div class="flex justify-center">
+        <!-- Form -->
+        <form class="p-14 w-full" action="#" id="form">
+          <label for="task" class="block text-sm font-medium text-gray-700 mb-1"
+            >Masukkan hal yang akan dilakukan</label
+          >
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            placeholder="Enter your task here"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+
+          <label
+            for="task"
+            class="block text-sm font-medium text-gray-700 mb-1 mt-3"
+            >Masukkan tanggal harus selesai</label
+          >
+          <input
+            type="date"
+            id="date"
+            name="date"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+
+          <input
+            type="submit"
+            value="Submit"
+            name="Submit"
+            class="btn-submit py-2 px-6 bg-[#493628] text-white rounded-lg mt-6 float-right active:bg-[#bb8c6a]  active:text-[#493628] hover:border-1 hover:border-[#493628] hover:"
+            id="submit"
+          />
+        </form>
+      </div>
+    </div>
+
+    <!-- To-do List Section -->
+    <div class="wrapper mt-5">
+      <div class="container bg-white shadow" id="add-todo"></div>
+
+      <div class="bg-[#A28168] py-4 px-8 w-1/2 mx-auto rounded-lg">
+        <h2 class="container-header text-white text-lg">
+          Yang harus dilakukan
+        </h2>
+        <div class="list-item" id="todos"></div>
+        <!-- Daftar tugas yang belum dikerjakan -->
+      </div>
+    </div>
+    <div class="wrapper mt-5 mb-20">
+      <div class="container bg-white shadow" id="add-todo"></div>
+
+      <div class="bg-[#A28168] py-4 px-8 w-1/2 mx-auto rounded-lg">
+        <h2 class="container-header text-white text-lg">
+          Yang sudah dilakukan
+        </h2>
+        <div class="list-item" id="completed-todos"></div>
+        <!-- Daftar tugas yang sudah dikerjakan -->
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      const todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const submitForm = document.getElementById("form");
+        submitForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          addTodo();
+        });
+        document.dispatchEvent(new Event("render-todo"));
+      });
+
+      function addTodo() {
+        const textTodo = document.getElementById("title").value;
+        const timestamp = document.getElementById("date").value;
+
+        const generatedID = generateId();
+        const todoObject = generateTodoObject(
+          generatedID,
+          textTodo,
+          timestamp,
+          false
+        );
+        todos.push(todoObject);
+        saveData();
+        document.dispatchEvent(new Event("render-todo"));
+        clearForm();
+      }
+
+      function generateId() {
+        return +new Date();
+      }
+
+      function generateTodoObject(id, task, timestamp, isCompleted) {
+        return {
+          id,
+          task,
+          timestamp,
+          isCompleted,
+        };
+      }
+
+      function saveData() {
+        localStorage.setItem("todos", JSON.stringify(todos));
+      }
+
+      document.addEventListener("render-todo", function () {
+        const uncompletedTODOList = document.getElementById("todos");
+        const completedTODOList = document.getElementById("completed-todos");
+
+        uncompletedTODOList.innerHTML = "";
+        completedTODOList.innerHTML = "";
+
+        for (const todoItem of todos) {
+          if (todoItem.isCompleted) {
+            const todoElement = makeTodo(todoItem);
+            completedTODOList.append(todoElement);
+          } else {
+            const todoElement = makeTodo(todoItem);
+            uncompletedTODOList.append(todoElement);
+          }
+        }
+      });
+
+      function makeTodo(todoObject) {
+        const textTitle = document.createElement("h2");
+        textTitle.innerText = todoObject.task;
+        textTitle.style.fontWeight = "bold"; // Bold untuk teks judul
+        textTitle.style.fontSize = "20px"; // Ukuran font
+
+        const textTimestamp = document.createElement("p");
+        textTimestamp.innerText = todoObject.timestamp;
+        textTimestamp.style.fontSize = "11px"; // Ukuran font
+
+        const textContainer = document.createElement("div");
+        textContainer.classList.add("inner");
+        textContainer.append(textTitle, textTimestamp);
+
+        const buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("button-container");
+
+        const container = document.createElement("div");
+        container.classList.add("item", "shadow");
+        container.append(textContainer, buttonContainer);
+        container.setAttribute("id", `todo-${todoObject.id}`);
+
+        // Menambahkan CSS langsung ke container
+        container.style.backgroundColor = "white"; // Latar belakang putih
+        container.style.borderRadius = "12px"; // Membuat sudut melengkung
+        container.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)"; // Efek bayangan
+        container.style.padding = "20px"; // Padding di dalam elemen
+        container.style.margin = "15px 0"; // Jarak antar elemen
+
+        // Menambahkan efek hover dengan event listener
+        container.addEventListener("mouseover", function () {
+          container.style.transform = "translateY(-5px)";
+          container.style.boxShadow = "0 8px 15px rgba(0, 0, 0, 0.2)";
+        });
+
+        if (todoObject.isCompleted) {
+          const undoButton = document.createElement("button");
+          undoButton.classList.add("undo-button");
+          undoButton.innerText = "Undo";
+
+          undoButton.addEventListener("click", function () {
+            undoTaskFromCompleted(todoObject.id);
+          });
+
+          const trashButton = document.createElement("button");
+          trashButton.classList.add("trash-button");
+          trashButton.innerText = "Hapus";
+
+          trashButton.addEventListener("click", function () {
+            removeTaskFromCompleted(todoObject.id);
+          });
+
+          buttonContainer.append(undoButton, trashButton);
+        } else {
+          const checkButton = document.createElement("button");
+          checkButton.classList.add("check-button");
+          checkButton.innerText = "Selesai";
+
+          checkButton.addEventListener("click", function () {
+            addTaskToCompleted(todoObject.id);
+          });
+
+          buttonContainer.append(checkButton);
+        }
+
+        // Mengatur gaya untuk buttonContainer
+        buttonContainer.style.display = "flex"; // Gunakan flexbox
+        buttonContainer.style.justifyContent = "flex-end"; // Rata kanan
+        buttonContainer.style.marginTop = "10px"; // Spasi atas untuk buttonContainer
+
+        return container;
+      }
+
+      function addTaskToCompleted(todoId) {
+        const todoTarget = findTodo(todoId);
+        if (todoTarget == null) return;
+
+        todoTarget.isCompleted = true;
+        saveData();
+        document.dispatchEvent(new Event("render-todo"));
+      }
+
+      function undoTaskFromCompleted(todoId) {
+        const todoTarget = findTodo(todoId);
+        if (todoTarget == null) return;
+
+        todoTarget.isCompleted = false;
+        saveData();
+        document.dispatchEvent(new Event("render-todo"));
+      }
+
+      function findTodo(todoId) {
+        for (const todo of todos) {
+          if (todo.id === todoId) {
+            return todo;
+          }
+        }
+        return null;
+      }
+
+      function removeTaskFromCompleted(todoId) {
+        const todoIndex = todos.findIndex((todo) => todo.id === todoId);
+        if (todoIndex === -1) return;
+
+        todos.splice(todoIndex, 1);
+        saveData();
+        document.dispatchEvent(new Event("render-todo"));
+      }
+
+      function clearForm() {
+        document.getElementById("title").value = "";
+        document.getElementById("date").value = "";
+      }
+    </script>
+  </body>
+</html>
