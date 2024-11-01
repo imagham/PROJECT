@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookshelf App</title>
+
+    <!-- Import Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Import your script -->
+    <script defer src="main.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div class="w-full max-w-3xl p-4 space-y-8">
+        <!-- Header -->
+        <header class="text-center py-5 bg-blue-600 text-white rounded-lg shadow-lg">
+            <h1 class="text-3xl font-bold">Bookshelf App</h1>
+        </header>
+     <!-- Search Book Section -->
+        <section class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Cari Buku</h2>
+            <form id="searchBook" data-testid="searchBookForm" class="space-y-4">
+                <div>
+                    <label for="searchBookTitle" class="block text-sm font-medium text-gray-700">Judul</label>
+                    <input id="searchBookTitle" type="text" data-testid="searchBookFormTitleInput" 
+                           class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <button id="searchSubmit" type="submit" data-testid="searchBookFormSubmitButton" 
+                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Cari
+                </button>
+            </form>
+        </section>
+        <!-- Add Book Section -->
+        <section class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Tambah Buku Baru</h2>
+            <form id="bookForm" data-testid="bookForm" class="space-y-4">
+                <div>
+                    <label for="bookFormTitle" class="block text-sm font-medium text-gray-700">Judul</label>
+                    <input id="bookFormTitle" type="text" required data-testid="bookFormTitleInput" 
+                           class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label for="bookFormAuthor" class="block text-sm font-medium text-gray-700">Penulis</label>
+                    <input id="bookFormAuthor" type="text" required data-testid="bookFormAuthorInput" 
+                           class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label for="bookFormYear" class="block text-sm font-medium text-gray-700">Tahun</label>
+                    <input id="bookFormYear" type="number" required data-testid="bookFormYearInput" 
+                           class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div class="flex items-center">
+                    <input id="bookFormIsComplete" type="checkbox" data-testid="bookFormIsCompleteCheckbox" class="mr-2" />
+                    <label for="bookFormIsComplete" class="text-sm text-gray-700">Selesai dibaca</label>
+                </div>
+                <button id="bookFormSubmit" type="submit" data-testid="bookFormSubmitButton" 
+                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Masukkan Buku ke rak Belum selesai dibaca
+                </button>
+            </form>
+        </section>
+
+   
+
+        <!-- Incomplete Books Section -->
+        <section class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Belum Selesai Dibaca</h2>
+            <div id="incompleteBookList" data-testid="incompleteBookList" class="space-y-4">
+                <!-- Book Item -->
+                <div data-bookid="123123123" data-testid="bookItem" class="border border-gray-300 p-4 rounded-md shadow-sm">
+                    <h3 data-testid="bookItemTitle" class="text-lg font-bold">Judul Buku 1</h3>
+                    <p data-testid="bookItemAuthor" class="text-gray-600">Penulis: Penulis Buku 1</p>
+                    <p data-testid="bookItemYear" class="text-gray-600">Tahun: 2030</p>
+                    <div class="mt-2 space-x-2">
+                        <button data-testid="bookItemIsCompleteButton" class="text-blue-600">Selesai dibaca</button>
+                        <button data-testid="bookItemDeleteButton" class="text-red-600">Hapus Buku</button>
+                        <button data-testid="bookItemEditButton" class="text-yellow-600">Edit Buku</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Completed Books Section -->
+        <section class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Selesai Dibaca</h2>
+            <div id="completeBookList" data-testid="completeBookList" class="space-y-4">
+                <!-- Book Item -->
+                <div data-bookid="456456456" data-testid="bookItem" class="border border-gray-300 p-4 rounded-md shadow-sm">
+                    <h3 data-testid="bookItemTitle" class="text-lg font-bold">Judul Buku 2</h3>
+                    <p data-testid="bookItemAuthor" class="text-gray-600">Penulis: Penulis Buku 2</p>
+                    <p data-testid="bookItemYear" class="text-gray-600">Tahun: 2030</p>
+                    <div class="mt-2 space-x-2">
+                        <button data-testid="bookItemIsCompleteButton" class="text-blue-600">Selesai dibaca</button>
+                        <button data-testid="bookItemDeleteButton" class="text-red-600">Hapus Buku</button>
+                        <button data-testid="bookItemEditButton" class="text-yellow-600">Edit Buku</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
